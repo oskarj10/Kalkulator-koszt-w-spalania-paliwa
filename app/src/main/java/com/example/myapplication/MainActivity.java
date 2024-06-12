@@ -1,8 +1,9 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,58 +12,65 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button buttonAdd, buttonSub, buttonMul, buttonDiv;
-    EditText editTextN1, editTextN2;
-    TextView textView;
-    int num1, num2;
+    Button buttonResult;
+    EditText editTextN1, editTextN2, editTextN3, editTextN4;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        buttonAdd = findViewById(R.id.btn_add);
-        buttonSub = findViewById(R.id.btn_sub);
-        buttonMul = findViewById(R.id.btn_mul);
-        buttonDiv = findViewById(R.id.btn_div);
+        buttonResult = findViewById(R.id.btn_result);
+
         editTextN1 = findViewById(R.id.number1);
         editTextN2 = findViewById(R.id.number2);
-        textView = findViewById(R.id.answer);
+        editTextN3 = findViewById(R.id.number3);
+        editTextN4 = findViewById(R.id.number4);
 
-        buttonAdd.setOnClickListener(this);
-        buttonSub.setOnClickListener(this);
-        buttonMul.setOnClickListener(this);
-        buttonDiv.setOnClickListener(this);
+
+        buttonResult.setOnClickListener(this);
+
+
+        editTextN1.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        editTextN2.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        editTextN3.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        editTextN4.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
     }
 
-    public int getIntFromEditText(EditText editText){
-
-        if (editText.getText().toString().equals("")){
+    public double getDoubleFromEditText(EditText editText) {
+        if (editText.getText().toString().equals("")) {
             Toast.makeText(this, "Wpisz liczbę", Toast.LENGTH_SHORT).show();
             return 0;
-        } else
-        return Integer.parseInt(editText.getText().toString());
-
+        } else {
+            return Double.parseDouble(editText.getText().toString());
+        }
     }
 
     @Override
     public void onClick(View view) {
-        num1 = getIntFromEditText(editTextN1);
-        num2 = getIntFromEditText(editTextN2);
+        double num1 = getDoubleFromEditText(editTextN1);
+        double num2 = getDoubleFromEditText(editTextN2);
+        double num3 = getDoubleFromEditText(editTextN3);
+        double num4 = getDoubleFromEditText(editTextN4);
 
-        if (view.getId() == R.id.btn_add) {
-            textView.setText("Answer = " + (num1 + num2));
-        } else if (view.getId() == R.id.btn_sub) {
-            textView.setText("Answer = " + (num1 - num2));
-        } else if (view.getId() == R.id.btn_mul) {
-            textView.setText("Answer = " + (num1 * num2));
-        } else if (view.getId() == R.id.btn_div) {
-            if (num2 != 0) {
-                textView.setText("Answer = " + ((float) num1 / num2));
-            } else {
-                Toast.makeText(this, "Nie można dzielić przez zero", Toast.LENGTH_SHORT).show();
-            }
+        if (view.getId() == R.id.btn_result) {
+
+            double totalCost = (num1 / 100) * num2 * num3;
+
+            double costPerPerson = totalCost / num4;
+
+            double costPer100km = (num2 * num3);
 
 
+            Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+            intent.putExtra("totalCost", totalCost);
+            intent.putExtra("costPerPerson", costPerPerson);
+            intent.putExtra("costPer100km", costPer100km);
+
+
+            startActivity(intent);
+        }
     }
-}}
+}
+
+
